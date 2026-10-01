@@ -1,0 +1,57 @@
+{
+  "name": "@lla/back",
+  "version": "0.1.0",
+  "private": true,
+  "prisma": {
+    "schema": "src/infrastructure/prisma/schema.prisma",
+    "seed": "tsx src/infrastructure/prisma/seed.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch --env-file .env src/infrastructure/http/server.ts",
+    "build": "tsc",
+    "start": "node dist/infrastructure/http/server.js",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:generate:logs": "prisma generate --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:logs": "prisma migrate dev --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "db:deploy": "prisma migrate deploy",
+    "db:deploy:logs": "prisma migrate deploy --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "db:seed": "prisma db seed",
+    "prisma:generate": "prisma generate",
+    "prisma:generate:logs": "prisma generate --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:logs": "prisma migrate dev --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:deploy:logs": "prisma migrate deploy --schema=src/infrastructure/prisma/logs/schema.prisma",
+    "prisma:seed": "prisma db seed",
+    "db:up": "docker compose -f ../bd/docker-compose.yml up -d --wait",
+    "db:down": "docker compose -f ../bd/docker-compose.yml down",
+    "db:reset": "docker compose -f ../bd/docker-compose.yml down -v && docker compose -f ../bd/docker-compose.yml up -d --wait",
+    "postinstall": "prisma generate && prisma generate --schema=src/infrastructure/prisma/logs/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "5.22.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "valibot": "^1.4.2",
+    "winston": "^3.19.0",
+    "winston-transport": "^4.9.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.11.0",
+    "prisma": "^5.22.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.5.0"
+  }
+}

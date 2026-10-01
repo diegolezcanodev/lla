@@ -1,0 +1,10 @@
+{
+  "name": "lla",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "db:up": "docker compose -f bd/docker-compose.yml up -d --wait",
+    "db:down": "docker compose -f bd/docker-compose.yml down",
+    "db:reset": "docker compose -f bd/docker-compose.yml down -v && pnpm db:up"
+  }
+}

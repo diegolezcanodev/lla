@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Marca LLA — Primario (Violeta dominante elegante y moderno) */
+    --color-primary:        #6D28D9; /* violet-700 */
+    --color-primary-hover:  #5B21B6; /* violet-800 */
+    --color-primary-light:  rgba(109, 40, 217, 0.08);
+
+    /* Secundario — Violeta noche profundo para Sidebar / Header */
+    --color-secondary:      #2E1065; /* violet-950 */
+    --color-secondary-hover:#1E0847;
+    --color-secondary-light:#F5F3FF; /* violet-50 */
+
+    /* Acento — Violeta vibrante */
+    --color-accent:         #8B5CF6; /* violet-500 */
+    --color-accent-hover:   #7C3AED; /* violet-600 */
+    --color-accent-light:   #EDE9FE; /* violet-100 */
+
+    /* Semánticos */
+    --color-success:        #10B981;
+    --color-success-light:  #ECFDF5;
+    --color-warning:        #F59E0B;
+    --color-warning-light:  #FFFBEB;
+    --color-danger:         #EF4444;
+    --color-danger-light:   #FEF2F2;
+    --color-info:           #6366F1;
+    --color-info-light:     #EEF2FF;
+    --color-violet:         #7C3AED;
+    --color-violet-hover:   #6D28D9;
+    --color-violet-light:   #F3E8FF;
+
+    /* Texto */
+    --color-text-primary:   #1E1B4B;
+    --color-text-secondary: #475569;
+    --color-text-tertiary:  #94A3B8;
+
+    /* Superficie */
+    --color-bg:             #FFFFFF;
+    --color-bg-secondary:   #FAF8FF;
+    --color-surface-raised: #FFFFFF;
+    --color-border:         #E2E8F0;
+
+    /* Radios */
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+
+    /* Tipografía */
+    --font-sans: 'Inter', system-ui, sans-serif;
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+  }
+}
+
+.select-dropdown-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(109, 40, 217, 0.25) transparent;
+}
+.select-dropdown-scroll::-webkit-scrollbar { width: 6px; }
+.select-dropdown-scroll::-webkit-scrollbar-track { background: transparent; }
+.select-dropdown-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(109, 40, 217, 0.25);
+  border-radius: 3px;
+}
+.select-dropdown-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(109, 40, 217, 0.4); }
+
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(109, 40, 217, 0.25) transparent;
+  scrollbar-gutter: stable;
+}
+.custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(109, 40, 217, 0.25);
+  border-radius: 3px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover { background-color: rgba(109, 40, 217, 0.4); }
+
+[data-sonner-toaster][dir=ltr] {
+  --toast-close-button-start: auto !important;
+  --toast-close-button-end: 0 !important;
+  --toast-close-button-transform: translate(35%, -35%) !important;
+}
+[data-sonner-toast][data-styled=true] [data-close-button] {
+  left: auto !important;
+  right: 0 !important;
+  top: 0 !important;
+  transform: translate(35%, -35%) !important;
+  border-radius: 9999px !important;
+}
+[data-sonner-toast][data-styled=true]:hover [data-close-button]:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+}

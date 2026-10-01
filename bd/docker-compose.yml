@@ -1,0 +1,44 @@
+name: lla-db
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lla-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_MAIN_USER:-lla}
+      POSTGRES_PASSWORD: ${DB_MAIN_PASSWORD:-lla}
+      POSTGRES_DB: ${DB_MAIN_NAME:-lla}
+    ports:
+      - "${DB_PORT:-5438}:5432"
+    volumes:
+      - lla_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_MAIN_USER:-lla} -d ${DB_MAIN_NAME:-lla}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-logs:
+    image: postgres:16-alpine
+    container_name: lla-db-logs
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_LOGS_USER:-lla_logs}
+      POSTGRES_PASSWORD: ${DB_LOGS_PASSWORD:-lla_logs}
+      POSTGRES_DB: ${DB_LOGS_NAME:-lla_logs}
+    ports:
+      - "${DB_LOGS_PORT:-5439}:5432"
+    volumes:
+      - lla_pgdata_logs:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_LOGS_USER:-lla_logs} -d ${DB_LOGS_NAME:-lla_logs}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lla_pgdata:
+    name: lla_pgdata
+  lla_pgdata_logs:
+    name: lla_pgdata_logs

@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Environment variables
+.env
+.env*.local
+!.env.example
+
+# Next.js
+front/.next
+front/out
+
+# TypeScript & Build
+dist
+*.tsbuildinfo
+back/dist
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs
+*.log
+
+# OS
+.DS_Store
+*.pem
+
+# Editor
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

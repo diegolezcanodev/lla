@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id            Int          @id @default(autoincrement())
+  email         String       @unique
+  nombreUsuario String?      @unique
+  nombre        String
+  apellido      String
+  contrasena    String
+  activo        Boolean      @default(true)
+  usuarioRoles  UsuarioRol[]
+  creadoEn      DateTime     @default(now())
+  actualizadoEn DateTime     @updatedAt
+
+  @@index([activo])
+}
+
+model Rol {
+  id       Int          @id @default(autoincrement())
+  nombre   String       @unique
+  usuarios UsuarioRol[]
+}
+
+model UsuarioRol {
+  id        Int     @id @default(autoincrement())
+  usuarioId Int
+  rolId     Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  rol       Rol     @relation(fields: [rolId], references: [id])
+
+  @@unique([usuarioId, rolId])
+  @@index([rolId])
+}
