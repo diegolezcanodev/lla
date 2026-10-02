@@ -10,7 +10,15 @@ import {
   LayoutDashboard,
   LogOut,
   Users,
+  UserCog,
+  MapPin,
   Sparkles,
+  Building2,
+  Flame,
+  GraduationCap,
+  AlertCircle,
+  Swords,
+  CheckSquare,
 } from 'lucide-react'
 import { logout } from '../../../services/auth'
 import { SidebarLink } from './SidebarLink'
@@ -61,7 +69,15 @@ export function Sidebar({
 
   const menuIcons: Record<string, React.ReactNode> = {
     '/dashboard': <LayoutDashboard size={20} />,
-    '/usuarios': <Users size={20} />,
+    '/equipo': <Users size={20} />,
+    '/barrios': <MapPin size={20} />,
+    '/empresas': <Building2 size={20} />,
+    '/stakeholders': <Flame size={20} />,
+    '/escuelas': <GraduationCap size={20} />,
+    '/reclamos': <AlertCircle size={20} />,
+    '/oposicion': <Swords size={20} />,
+    '/tareas': <CheckSquare size={20} />,
+    '/usuarios': <UserCog size={20} />,
   }
 
   function getMenuIcon(url: string): React.ReactNode {

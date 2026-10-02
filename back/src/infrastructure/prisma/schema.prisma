@@ -7,17 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TipoMiembro {
+  EQUIPO
+  ESTRATEGIA
+  FISCAL
+  VECINO
+}
+
 model Usuario {
-  id            Int          @id @default(autoincrement())
-  email         String       @unique
-  nombreUsuario String?      @unique
-  nombre        String
-  apellido      String
-  contrasena    String
-  activo        Boolean      @default(true)
-  usuarioRoles  UsuarioRol[]
-  creadoEn      DateTime     @default(now())
-  actualizadoEn DateTime     @updatedAt
+  id               Int               @id @default(autoincrement())
+  email            String            @unique
+  nombreUsuario    String?           @unique
+  nombre           String
+  apellido         String
+  contrasena       String
+  activo           Boolean           @default(true)
+  usuarioRoles     UsuarioRol[]
+  miembroEquipo    MiembroEquipo?
+  comentariosTarea ComentarioTarea[]
+  creadoEn         DateTime          @default(now())
+  actualizadoEn    DateTime          @updatedAt
 
   @@index([activo])
 }
@@ -37,4 +46,322 @@ model UsuarioRol {
 
   @@unique([usuarioId, rolId])
   @@index([rolId])
+}
+
+enum PrioridadBarrio {
+  ALTA
+  MEDIA
+  BAJA
+  EN_DISPUTA
+}
+
+model Barrio {
+  id            Int             @id @default(autoincrement())
+  nombre        String          @unique
+  codigo        String?         @db.VarChar(10)
+  color         String?         @db.VarChar(20)
+  prioridad     PrioridadBarrio @default(MEDIA)
+  descripcion   String?         @db.Text
+  observaciones String?         @db.Text
+  tags          String[]        @default([])
+  activo        Boolean         @default(true)
+  miembros      MiembroEquipo[]
+  empresas      Empresa[]
+  stakeholders  Stakeholder[]
+  escuelas      Escuela[]
+  reclamos      Reclamo[]
+  tareas        Tarea[]
+  creadoEn      DateTime        @default(now())
+  actualizadoEn DateTime        @updatedAt
+
+  @@index([activo])
+  @@index([prioridad])
+}
+
+model MiembroEquipo {
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  apellido      String
+  dni           String?         @unique
+  telefono      String?
+  email         String?
+  instagram     String?
+  barrioId      Int?
+  barrio        Barrio?         @relation(fields: [barrioId], references: [id], onDelete: SetNull)
+  direccion     String?
+  tipo          TipoMiembro     @default(EQUIPO)
+  activo        Boolean         @default(true)
+  observaciones String?         @db.Text
+  usuarioId     Int?            @unique
+  usuario       Usuario?        @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  reclamos      Reclamo[]
+  tareas        TareaAsignado[]
+  creadoEn      DateTime        @default(now())
+  actualizadoEn DateTime        @updatedAt
+
+  @@index([tipo])
+  @@index([barrioId])
+  @@index([activo])
+}
+
+// ─────────────────────────────────────────────
+// 1. EMPRESAS
+// ─────────────────────────────────────────────
+enum TamanoEmpresa {
+  MICRO
+  PEQUENA
+  MEDIANA
+  GRANDE
+}
+
+model Empresa {
+  id                Int            @id @default(autoincrement())
+  nombre            String
+  rubro             String?
+  tamano            TamanoEmpresa?
+  cuit              String?        @unique
+  telefono          String?
+  email             String?
+  direccion         String
+  barrioId          Int
+  barrio            Barrio         @relation(fields: [barrioId], references: [id])
+  contactoPrincipal String?
+  observaciones     String?        @db.Text
+  activa            Boolean        @default(true)
+  creadoEn          DateTime       @default(now())
+  actualizadoEn     DateTime       @updatedAt
+
+  @@index([barrioId])
+  @@index([activa])
+}
+
+// ─────────────────────────────────────────────
+// 2. STAKEHOLDERS (ACTORES CLAVE / CRM)
+// ─────────────────────────────────────────────
+model Stakeholder {
+  id                  Int       @id @default(autoincrement())
+  nombre              String
+  apellido            String
+  esAliado            Boolean   @default(false)
+  fechaUltimoContacto DateTime  @default(now()) @db.Date
+  cargo               String?
+  organizacion        String?
+  telefono            String?
+  email               String?
+  instagram           String?
+  barrioId            Int?
+  barrio              Barrio?   @relation(fields: [barrioId], references: [id], onDelete: SetNull)
+  nivelInfluencia     Int       @default(5)
+  observaciones       String?   @db.Text
+  activo              Boolean   @default(true)
+  creadoEn            DateTime  @default(now())
+  actualizadoEn       DateTime  @updatedAt
+
+  @@index([barrioId])
+  @@index([esAliado])
+  @@index([activo])
+}
+
+// ─────────────────────────────────────────────
+// 3. ESCUELAS
+// ─────────────────────────────────────────────
+enum NivelEducativo {
+  INICIAL
+  PRIMARIA
+  SECUNDARIA
+  TERCIARIA
+  UNIVERSITARIA
+  ESPECIAL
+}
+
+model Escuela {
+  id               Int            @id @default(autoincrement())
+  nombre           String
+  numero           Int?
+  nivel            NivelEducativo
+  modalidad        String?
+  direccion        String?
+  barrioId         Int?
+  barrio           Barrio?        @relation(fields: [barrioId], references: [id], onDelete: SetNull)
+  director         String?
+  telefonoDirector String?
+  emailDirector    String?
+  observaciones    String?        @db.Text
+  activa           Boolean        @default(true)
+  creadoEn         DateTime       @default(now())
+  actualizadoEn    DateTime       @updatedAt
+
+  @@index([barrioId])
+  @@index([nivel])
+  @@index([activa])
+}
+
+// ─────────────────────────────────────────────
+// 4. RECLAMOS VECINALES
+// ─────────────────────────────────────────────
+enum CategoriaReclamo {
+  ALUMBRADO
+  PAVIMENTO
+  AGUA
+  CLOACAS
+  LIMPIEZA
+  SEGURIDAD
+  TRANSPORTE
+  SALUD
+  OTRO
+}
+
+enum EstadoReclamo {
+  PENDIENTE
+  EN_PROCESO
+  RESUELTO
+  RECHAZADO
+}
+
+enum PrioridadReclamo {
+  ALTA
+  MEDIA
+  BAJA
+}
+
+model Reclamo {
+  id            Int              @id @default(autoincrement())
+  titulo        String           @default("")
+  vecino        String
+  dni           String?
+  telefono      String?
+  barrioId      Int?
+  barrio        Barrio?          @relation(fields: [barrioId], references: [id], onDelete: SetNull)
+  direccion     String?
+  categoria     CategoriaReclamo @default(OTRO)
+  estado        EstadoReclamo    @default(PENDIENTE)
+  prioridad     PrioridadReclamo @default(MEDIA)
+  descripcion   String           @db.Text
+  respuesta     String?          @db.Text
+  asignadoAId   Int?
+  asignadoA     MiembroEquipo?   @relation(fields: [asignadoAId], references: [id], onDelete: SetNull)
+  observaciones String?          @db.Text
+  creadoEn      DateTime         @default(now())
+  actualizadoEn DateTime         @updatedAt
+
+  @@index([barrioId])
+  @@index([estado])
+  @@index([categoria])
+  @@index([prioridad])
+  @@index([asignadoAId])
+}
+
+// ─────────────────────────────────────────────
+// 5. OPOSICIÓN / CONTRINCANTES
+// ─────────────────────────────────────────────
+model Partido {
+  id              Int         @id @default(autoincrement())
+  nombre          String      @unique
+  sigla           String?
+  color           String?     @db.VarChar(20)
+  referenteNombre String?
+  observaciones   String?     @db.Text
+  activo          Boolean     @default(true)
+  candidatos      Candidato[]
+  creadoEn        DateTime    @default(now())
+  actualizadoEn   DateTime    @updatedAt
+
+  @@index([activo])
+}
+
+enum NivelAmenaza {
+  BAJO
+  MEDIO
+  ALTO
+  CRITICO
+}
+
+model Candidato {
+  id              Int          @id @default(autoincrement())
+  nombre          String
+  apellido        String
+  partidoId       Int?
+  partido         Partido?     @relation(fields: [partidoId], references: [id], onDelete: SetNull)
+  cargo           String?
+  telefono        String?
+  email           String?
+  instagram       String?
+  fortalezas      String?      @db.Text
+  debilidades     String?      @db.Text
+  infoEstrategica String?      @db.Text
+  nivelAmenaza    NivelAmenaza @default(BAJO)
+  observaciones   String?      @db.Text
+  activo          Boolean      @default(true)
+  creadoEn        DateTime     @default(now())
+  actualizadoEn   DateTime     @updatedAt
+
+  @@index([partidoId])
+  @@index([nivelAmenaza])
+  @@index([activo])
+}
+
+// ─────────────────────────────────────────────
+// 6. TAREAS / TICKETS CON COMENTARIOS Y ASIGNACIÓN MÚLTIPLE
+// ─────────────────────────────────────────────
+enum EstadoTarea {
+  PENDIENTE
+  EN_PROGRESO
+  EN_REVISION
+  COMPLETADA
+  CANCELADA
+}
+
+enum PrioridadTarea {
+  BAJA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+model Tarea {
+  id            Int               @id @default(autoincrement())
+  titulo        String
+  descripcion   String?           @db.Text
+  estado        EstadoTarea       @default(PENDIENTE)
+  prioridad     PrioridadTarea    @default(MEDIA)
+  fechaLimite   DateTime?         @db.Date
+  barrioId      Int?
+  barrio        Barrio?           @relation(fields: [barrioId], references: [id], onDelete: SetNull)
+  etiquetas     String[]          @default([])
+  observaciones String?           @db.Text
+  asignados     TareaAsignado[]
+  comentarios   ComentarioTarea[]
+  creadoEn      DateTime          @default(now())
+  actualizadoEn DateTime          @updatedAt
+
+  @@index([estado])
+  @@index([prioridad])
+  @@index([barrioId])
+  @@index([fechaLimite])
+}
+
+model TareaAsignado {
+  id              Int           @id @default(autoincrement())
+  tareaId         Int
+  tarea           Tarea         @relation(fields: [tareaId], references: [id], onDelete: Cascade)
+  miembroEquipoId Int
+  miembroEquipo   MiembroEquipo @relation(fields: [miembroEquipoId], references: [id], onDelete: Cascade)
+
+  @@unique([tareaId, miembroEquipoId])
+  @@index([tareaId])
+  @@index([miembroEquipoId])
+}
+
+model ComentarioTarea {
+  id        Int      @id @default(autoincrement())
+  tareaId   Int
+  tarea     Tarea    @relation(fields: [tareaId], references: [id], onDelete: Cascade)
+  usuarioId Int?
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+  autor     String
+  mensaje   String   @db.Text
+  creadoEn  DateTime @default(now())
+
+  @@index([tareaId])
+  @@index([usuarioId])
 }

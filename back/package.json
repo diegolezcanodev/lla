@@ -18,6 +18,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:deploy:logs": "prisma migrate deploy --schema=src/infrastructure/prisma/logs/schema.prisma",
     "db:seed": "prisma db seed",
+    "db:seed:empresas": "tsx src/infrastructure/prisma/seedEmpresas.ts",
     "prisma:generate": "prisma generate",
     "prisma:generate:logs": "prisma generate --schema=src/infrastructure/prisma/logs/schema.prisma",
     "prisma:migrate": "prisma migrate dev",

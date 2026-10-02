@@ -5,6 +5,7 @@
   "scripts": {
     "db:up": "docker compose -f bd/docker-compose.yml up -d --wait",
     "db:down": "docker compose -f bd/docker-compose.yml down",
-    "db:reset": "docker compose -f bd/docker-compose.yml down -v && pnpm db:up"
+    "db:reset": "docker compose -f bd/docker-compose.yml down -v && pnpm db:up",
+    "db:seed:empresas": "pnpm --filter @lla/back db:seed:empresas"
   }
 }

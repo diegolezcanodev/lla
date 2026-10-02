@@ -12,11 +12,21 @@ import type { UserResponseDTO } from '../../../types/user'
 
 const ADMIN_MENUS: MenuItem[] = [
   { url: '/dashboard', nombre: 'Dashboard' },
+  { url: '/equipo', nombre: 'Equipo' },
+  { url: '/barrios', nombre: 'Barrios' },
+  { url: '/empresas', nombre: 'Empresas' },
+  { url: '/stakeholders', nombre: 'Actores Clave' },
+  { url: '/escuelas', nombre: 'Escuelas' },
+  { url: '/reclamos', nombre: 'Reclamos' },
+  { url: '/oposicion', nombre: 'Oposición' },
+  { url: '/tareas', nombre: 'Tareas' },
   { url: '/usuarios', nombre: 'Usuarios' },
 ]
 
 const DEFAULT_MENUS: MenuItem[] = [
   { url: '/dashboard', nombre: 'Dashboard' },
+  { url: '/reclamos', nombre: 'Reclamos' },
+  { url: '/tareas', nombre: 'Tareas' },
 ]
 
 function menusFor(roles: string[]): MenuItem[] {

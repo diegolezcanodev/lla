@@ -11,6 +11,8 @@ interface InputFieldProps {
   required?: boolean
   placeholder?: string
   autoComplete?: string
+  maxLength?: number
+  className?: string
 }
 
 export function InputField({
@@ -26,6 +28,8 @@ export function InputField({
   required,
   placeholder,
   autoComplete,
+  maxLength,
+  className,
 }: InputFieldProps) {
   return (
     <div>
@@ -42,9 +46,10 @@ export function InputField({
         disabled={disabled}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        maxLength={maxLength}
         className={`w-full px-3 py-2 rounded-md border bg-white text-text-primary placeholder-text-tertiary
           focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary disabled:opacity-50 disabled:bg-bg-secondary
-          ${error ? 'border-danger' : 'border-border'}`}
+          ${error ? 'border-danger' : 'border-border'} ${className ?? ''}`}
       />
       {error && <p className="text-xs text-danger mt-0.5">{error}</p>}
     </div>

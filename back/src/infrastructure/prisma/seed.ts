@@ -16,6 +16,18 @@ async function main(): Promise<void> {
     create: { nombre: 'Usuario' },
   })
 
+  await prisma.rol.upsert({
+    where: { nombre: 'Equipo' },
+    update: {},
+    create: { nombre: 'Equipo' },
+  })
+
+  await prisma.rol.upsert({
+    where: { nombre: 'Estrategia' },
+    update: {},
+    create: { nombre: 'Estrategia' },
+  })
+
   const hashed = await bcrypt.hash('admin123', 10)
   const admin = await prisma.usuario.upsert({
     where: { email: 'admin@lla.com' },
